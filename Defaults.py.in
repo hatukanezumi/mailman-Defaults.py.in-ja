@@ -1,7 +1,7 @@
 # -*- python -*-
 # -*- coding: euc-jp -*-
 
-# Copyright (C) 1998-2004 by the Free Software Foundation, Inc.
+# Copyright (C) 1998-2005 by the Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -901,8 +901,8 @@ DEFAULT_ADMIN_IMMED_NOTIFY = Yes
 # 管理者に入会/退会を知らせるか.
 DEFAULT_ADMIN_NOTIFY_MCHANGES = No
 
-# この日数の後, 保留されているメッセージを破棄する [>=2.1.6]
-DEFAULT_MAX_DAYS_TO_HOLD = 3            # 日数
+# この日数の後, 保留されているメッセージを破棄する [>=2.1.6] [訳注: 0 にすると破棄しない]
+DEFAULT_MAX_DAYS_TO_HOLD = 0
 
 # リスト会員の投稿は, 既定で司会つきにするか. [>=2.1;
 # DEFAULT_MODERATED は廃止]
