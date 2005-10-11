@@ -17,8 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-# [訳注] このファイルは, Mailman 2.1.X 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での CVS リビジョンは 2.112.2.32)
+# [訳注] このファイルは, Mailman 2.X 配布物に含まれる
+#   Mailman/Defaults.py.in (SF.net での CVS リビジョンは 2.132)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -1402,6 +1402,7 @@ add_language('fi',    _('Finnish'),             'iso-8859-1')
 add_language('fr',    _('French'),              'iso-8859-1')
 add_language('hr',    _('Croatian'),            'iso-8859-2')
 add_language('hu',    _('Hungarian'),           'iso-8859-2')
+add_language('ia',    _('Interlingua'),         'iso-8859-15')
 add_language('it',    _('Italian'),             'iso-8859-1')
 add_language('ja',    _('Japanese'),            'euc-jp')
 add_language('ko',    _('Korean'),              'euc-kr')
