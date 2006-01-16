@@ -1,7 +1,7 @@
 # -*- python -*-
 # -*- coding: euc-jp -*-
 
-# Copyright (C) 1998-2005 by the Free Software Foundation, Inc.
+# Copyright (C) 1998-2006 by the Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,8 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.1.7 配布物に含まれる
-#   Mailman/Defaults.py.in
+# [訳注] このファイルは, Mailman 2.1.X 配布物に含まれる
+#   Mailman/Defaults.py.in (SF.net での CVS リビジョンは 2.112.2.36)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -497,9 +497,11 @@ NNTP_REWRITE_DUPLICATE_HEADERS = [
     ]
 
 # リスト全員に送るようなすべての「普通の」メッセージは, このハンドラモ
-# ジュールのパイプラインを通る. それぞれのリスト自身では, `pipeline' 
-# 属性を定義すればグローバルなパイプラインを上書きできる. [>=2.1] [訳
-# 注: 2.1.6 から Scrubber モジュールが追加された.]
+# ジュールのパイプラインを通る [>=2.1]. それぞれのリスト自身では,
+# `pipeline' 属性を定義すればグローバルなパイプラインを上書きできる.
+# [訳注]
+#   2.1.6 から Scrubber モジュールが追加された.
+#   2.1.X から CleanseDKIM モジュールが追加された.
 GLOBAL_PIPELINE = [
     # まずは, すべての配送過程で共通の処理をするモジュール.
     'SpamDetect',
@@ -514,6 +516,7 @@ GLOBAL_PIPELINE = [
     'CalcRecips',
     'AvoidDuplicates',
     'Cleanse',
+    'CleanseDKIM',
     'CookHeaders',
     # それから, メッセージをまとめ読み用の mbox ファイル, 保存書庫, 
     # ニューズのキューに送る. それぞれの runner が, それぞれの配送過程
@@ -528,10 +531,12 @@ GLOBAL_PIPELINE = [
     'ToOutgoing',
     ]
 
-# これは, -owner アドレスに送られてきたメッセージが通るパイプライン.
+# これは, -owner アドレスに送られてきたメッセージが通るパイプライン
+# [>=2.1] [訳注: 2.1.X から CleanseDKIM モジュールが追加された].
 OWNER_PIPELINE = [
     'SpamDetect',
     'Replybot',
+    'CleanseDKIM',
     'OwnerRecips',
     'ToOutgoing',
     ]
