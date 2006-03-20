@@ -689,7 +689,13 @@ VERP_DELIVERY_INTERVAL = 0
 VERP_CONFIRM_FORMAT = '%(addr)s+%(cookie)s'
 
 # これは VERP_REGEXP と同様, ただし VERP_CONFIRM_FORMAT での分割用.
-VERP_CONFIRM_REGEXP = r'^(?P<addr>[^+]+?)\+(?P<cookie>[^@]+)@.*$'
+# なお, [訳注: 2.1.8xx 以降は]
+# From: local_part@host
+# を
+# To: "local_part" <local_part@host>
+# に書き換えて返事をするような MUA を考慮して, '<' より前にあるものは
+# すべて無視するようにした.
+VERP_CONFIRM_REGEXP = r'^(.*<)?(?P<addr>[^+]+?)\+(?P<cookie>[^@]+)@.*$'
 
 # これを Yes に設定すると, VERP 風 (よりユーザに親切) な確認メッセージを使う.
 VERP_CONFIRMATIONS = No
