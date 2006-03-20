@@ -19,7 +19,7 @@
 # USA.
 
 # [訳注] このファイルは, Mailman 2.X 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での CVS リビジョンは 2.136)
+#   Mailman/Defaults.py.in (SF.net での CVS リビジョンは 2.138)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -1001,6 +1001,12 @@ DEFAULT_SUBSCRIBE_POLICY = 1
 
 # 当サイトでは, まったくチェックなしに入会できるようにするか.
 ALLOW_OPEN_SUBSCRIBE = No
+
+# これは, リストの subscribe_policy が 2 や 3 であっても承認なしに入会
+# できるアドレスや (^ で始まっていれば) その正規表現の一覧の既定値
+# [>=rev.2.138].
+# [訳注: リストごとの値は subscribe_auto_approval 属性で変更できる.]
+DEFAULT_SUBSCRIBE_AUTO_APPROVAL = []
 
 # 退会の既定の方針. 0 (承認なしの退会) を強くお勧めする! [>=2.1]
 # 0 - 承認なしで退会できる
