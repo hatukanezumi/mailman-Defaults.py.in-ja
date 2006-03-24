@@ -216,13 +216,13 @@ WEB_HIGHLIGHT_COLOR = '#dddddd'                   # 真なら, listinfo と admin
 # 保存書庫の既定値
 #####
 
-# 公開保存書庫の URL のテンプレート. これはいくつかの場所で使う:
+# 公開保存書庫の URL のテンプレート [>=2.1]. これはいくつかの場所で使う:
 # List-Archive: ヘッダ, リストの listinfo ページ, リストの管理ページで.
 #
 # これは "%(listname)s" がどこかに入った文字列でなければいけな
 # い. Mailman はここにリストの名前を代入する. 文字列に "%(hostname)s" 
 # をいれることもできる.  Mailman はここにホスト名 (たいてい 
-# DEFAULT_URL_HOST) を代入する. [>=2.1]
+# DEFAULT_URL_HOST) を代入する.
 PUBLIC_ARCHIVE_URL = 'http://%(hostname)s/pipermail/%(listname)s'
 
 # 保存書庫が既定で有効かどうか.
@@ -269,15 +269,15 @@ PUBLIC_EXTERNAL_ARCHIVER = No
 PRIVATE_EXTERNAL_ARCHIVER = No
 
 # マルチパートのメッセージを「フラット」なメッセージ (つまりシングルパー
-# トのメッセージ) に変換するフィルタモジュール. これは Pipermail で必
-# 要だが, 外部保存書庫作成プログラムを使うのなら 0 に設定するといいか
-# も.
+# トのメッセージ) に変換するフィルタモジュール [>=2.1]. これは Pipermail
+# で必要だが, 外部保存書庫作成プログラムを使うのなら 0 に設定するとい
+# いかも.
 # また, 自分で作ったモジュールに置き換えることもできるが, すくなくとも
 # process() という関数を含んでいて, この関数が MailList オブジェクトと
 # Message オブジェクトを引数にとるようになっていないといけない. これは
 # メッセージを捨てるときは Errors.DiscardMessage を raise しないといけ
 # ない. 捨てないときは, Message オブジェクトを必要に応じて修正しないと
-# いけない.  [>=2.1]
+# いけない.
 ARCHIVE_SCRUBBER = 'Mailman.Handlers.Scrubber'
 
 # Mailman.Handlers.Scrubber で, filename パラメタで示される添付ファイ
@@ -293,9 +293,9 @@ SCRUBBER_DONT_USE_ATTACHMENT_FILENAME = True
 # ここを True に設定できる [>=2.1.6]
 SCRUBBER_USE_ATTACHMENT_FILENAME_EXTENSION = False
 
-# この変数は, text/html のサブパートで何をするかを定義する. 完全に取り
-# 除くか, エスケープするか, 外部プログラムでフィルタするか. 指定できる
-# 値は:
+# この変数は, text/html のサブパートで何をするかを定義する [>=2.1].
+# 完全に取り除くか, エスケープするか, 外部プログラムでフィルタするか.
+# 指定できる値は:
 # 0 - text/html パートを完全に取り除き, メッセージに削除した旨の注意書
 #     きを残す. 一番外側のパートが text/html だったら, メッセージ全体
 #     を破棄する.
@@ -320,7 +320,7 @@ SCRUBBER_USE_ATTACHMENT_FILENAME_EXTENSION = False
 # れ, これはプログラムが処理する一時ファイルの名前になる. 処理されたメッ
 # セージは標準出力に書き出さなければいけない. HTML からプレインテキス
 # トへの変換プログラムを指定したければ, ここを 
-# HTML_TO_PLAIN_TEXT_COMMAND に設定する.  [>=2.1]
+# HTML_TO_PLAIN_TEXT_COMMAND に設定する.
 ARCHIVE_HTML_SANITIZER = 1
 
 # ダウンロードできる保存書庫の .txt ファイルを gzip 圧縮するなら Yes 
@@ -689,7 +689,7 @@ VERP_DELIVERY_INTERVAL = 0
 VERP_CONFIRM_FORMAT = '%(addr)s+%(cookie)s'
 
 # これは VERP_REGEXP と同様, ただし VERP_CONFIRM_FORMAT での分割用.
-# なお, [訳注: 2.1.8xx 以降は]
+# なお, [訳注: 2.1.8b1 以降は]
 # From: local_part@host
 # を
 # To: "local_part" <local_part@host>
