@@ -19,13 +19,13 @@
 # USA.
 
 # [訳注] このファイルは, Mailman 2.X 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での CVS リビジョンは 2.138)
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r7858)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
 #   確な理解のためには, 配布物に含まれる原文を参照されることをお勧めし
 #   ます.
-#   訳者: IKEDA Soji <nezumi@poem.co.jp>
+#   訳者: IKEDA Soji <hatuka@nezumi.nu>
 
 """配布時点の Mailman の重要な設定変数の既定値."""
 
@@ -42,12 +42,6 @@ def hours(h): return h * 60 * 60
 def days(d): return d * 60 * 60 * 24
 
 # 便利な定数 [>=2.1.2]
-try:
-    True, False
-except NameError:
-    True = 1
-    False = 0
-
 Yes = yes = On = on = True
 No = no = Off = off = False
 
@@ -574,9 +568,9 @@ OWNER_PIPELINE = [
 #     変数での指定によって From: かエンヴェロープ送信者かになる.
 #
 # 各項目は 2 要素のタプルの形式で, 最初の要素がメッセージを出力する 
-# logs/ の中のファイルの名前で, 次が Python の %スタイルの文字列置き換
-# えである書式文字列になっている. ファイル名は任意; qfiles/<名前> は, 
-# もしなければ自動的に作成される.
+# ロガー (親の 'mailman' ロガーの子プロセス) の名前で, 次が Python の
+# % スタイルの文字列置き換えに使えるような書式文字列になっている. ファイ
+# ル名は任意; qfiles/<名前> は, もしなければ自動的に作成される.
 
 # 配送が成功かそうでないかにかかわらず, メッセージ配送ごとに出力するメッ
 # セージの書式. このログメッセージの出力を無効にするには None を設定す
@@ -1004,7 +998,7 @@ ALLOW_OPEN_SUBSCRIBE = No
 
 # これは, リストの subscribe_policy が 2 や 3 であっても承認なしに入会
 # できるアドレスや (^ で始まっていれば) その正規表現の一覧の既定値
-# [>=rev.2.138].
+# [>=CVS:2.138;svn:r7827].
 # [訳注: リストごとの値は subscribe_auto_approval 属性で変更できる.]
 DEFAULT_SUBSCRIBE_AUTO_APPROVAL = []
 
