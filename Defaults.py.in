@@ -568,7 +568,7 @@ OWNER_PIPELINE = [
 #     変数での指定によって From: かエンヴェロープ送信者かになる.
 #
 # 各項目は 2 要素のタプルの形式で, 最初の要素がメッセージを出力する 
-# ロガー (親の 'mailman' ロガーの子プロセス) の名前で, 次が Python の
+# ロガー ('mailman' ロガーからできる子) の名前で, 次が Python の
 # % スタイルの文字列置き換えに使えるような書式文字列になっている. ファイ
 # ル名は任意; qfiles/<名前> は, もしなければ自動的に作成される.
 
@@ -1372,6 +1372,8 @@ PIDFILE = os.path.join(DATA_DIR, 'master-qrunner.pid')
 SITE_PW_FILE = os.path.join(DATA_DIR, 'adm.pw')
 LISTCREATOR_PW_FILE = os.path.join(DATA_DIR, 'creator.pw')
 
+
+
 # バージョン番号関係をインポート
 from Version import *
 
