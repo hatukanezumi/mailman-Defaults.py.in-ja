@@ -18,8 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.X 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r7881)
+# [訳注] このファイルは, Mailman 2.2.0a1 配布物に含まれる
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r7929)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -33,6 +33,11 @@
 # そういったことは, かならず mm_cfg.py の指定された範囲に書くこと.
 # 詳しくは mm_cfg.py のコメントを見る.
 
+# [訳注] 2.2.0 から, 標準の設定ファイルは $VAR_PREFIX/etc/mailman.cfg
+#   となった (設定ファイルの場所を mailmactl の -C/--config オプションで
+#   指定することもできるようになった).  ファイルの書式は従来と変わらない
+#   が, 仮想ホストの設定などは書き直す必要がある.  従来の mm_cfg.py に書
+#   いた設定も反映されるが, mailman.cfg の設定が優先される.
 
 import os
 
@@ -68,29 +73,26 @@ MAILMAN_URL = 'http://www.gnu.org/software/mailman/index.html'
 #MAILMAN_URL = 'http://www.list.org/'
 #MAILMAN_URL = 'http://mailman.sf.net/'
 
-# Mailman は, (少なくとも) 二つの完全修飾ドメイン名 (FQDN) について知
-# る必要がある; 1) あなたの URL に使うホスト名と, 2) あなたのドメイン
-# の電子メールアドレスに使うホスト名. たとえば, みんながあなたの 
-# Mailman システムに"http://www.dom.ain/mailman" でアクセスするのなら, 
-# あなたの URL に使うFQDN は "www.dom.ain" になる. みんながあなたのシ
-# ステムに "yourlist@dom.ain" 宛でメールを送るのなら, あなたの電子メー
-# ルの FQDN は "dom.ain" になる. DEFAULT_URL_HOST は前者を制御し,
-# DEFAULT_EMAIL_HOST は後者を制御する. Mailman はまた, 一方を他方にマッ
-# プするやりかたも知る必要がある (これは特に, 仮想ドメインでの運用で重
-# 要). 新しくマップを追加するのには
-# "add_virtualhost(URLのFQDN, 電子メールのFQDN)" が使える.
-#
-# mm_cfg.py で DEFAULT_EMAIL_HOST と DEFAULT_URL_HOST を変更する必
-# 要がないのなら, ほかにやることはなし; 既定のマップは自動的に追加される.
-# しかし, あなたが mm_cfg.py のほうで変数をどれか変えたのなら, 次のも
-# のも書いておくこと:
-#
-#     add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
-#
-# だってそうしないと, 既定のマッピングが修正されないから.
-DEFAULT_EMAIL_HOST = '@MAILHOST@'
-DEFAULT_URL_HOST = '@URLHOST@'
 DEFAULT_URL_PATTERN = 'http://%s/mailman/'
+
+# このアドレスは, 自然な返信先をもたないようなコンポーネントからメッセー
+# ジを発信する場合の発信元アドレス [>=2.2.0].  実在の人物のアドレスか
+# /dev/null にする.  アドレスのドメインには, リストのホスト名か, それが
+# つかえなければ DEFAULT_EMAIL_HOST がはいる.  このアドレスはバウンスを
+# 発生させてはならない.  また, Mailman のなにかの機能を指すようにしては
+# ならない.
+NO_REPLY_ADDRESS = 'noreply'
+
+# このアドレスは "サイト管理者" のアドレス [>=2.2.0].  人間に送らなければ
+# ばならないがリスト管理者には送れないようなメッセージ (例: リスト管理者
+# からのバウンス) は, このアドレスに送る.  これは実在の人物を指していなけ
+# ればならない.
+# [訳注] 2.2.0 からは, 「サイト全体のメーリングリスト」(既定では
+#   "mailman" というリスト) が不要になった.  これにともない
+#   MAILMAN_SITE_LIST [<=2.1*] は廃止.  サイト全体のリストは削除しても
+#   かまわない.  かわりに, この SITE_OWNER_ADDRESS をサイト管理者に 向け
+#   ること.
+SITE_OWNER_ADDRESS = 'changeme@example.com'
 
 # DEFAULT_HOST_NAME は DEFAULT_EMAIL_HOST に置き換わった [>=2.1].
 # しかし, サイトによっては前のものがまだ mm_cfg.py ファイルに書いてあ
@@ -101,7 +103,6 @@ DEFAULT_HOST_NAME = None
 DEFAULT_URL = None
 
 HOME_PAGE         = 'index.html'
-MAILMAN_SITE_LIST = 'mailman'
 
 # 通常はサイト管理者は, サイトパスワードで Web ページの認証をしたとき, 
 # リスト管理者として認証するようなクッキーを受け取る. このため, サイト
@@ -127,41 +128,48 @@ HTML_TO_PLAIN_TEXT_COMMAND = '/usr/bin/lynx -dump %(filename)s'
 # 仮想ドメイン
 #####
 
-# ここで, 仮想ホストのマッピングを設定する. これは主として, Web経由の
-# リスト作成に使うので, その影響は現時点ではかなり限られたものだ. 新し
-# くマッピングを追加するには add_virtualhost() 呼出しを使う. マップの
-# キーは Utils.get_domain() で指定する文字列で, 値は DEFAULT_HOST_NAME 
-# に当たるもの. [>=2.1]
-VIRTUAL_HOSTS = {}
-
-# Yes に設定すると, その計算機の listinfo ページと admin ページでの一
-# 覧が, web_page_url 設定オプションのホスト名がアクセスしているページ
-# の URL にあるリストだけに--- 「その仮想ホストにあるリストだけに」--- 
-# 限られるようになる. No に設定すると, 一覧にはすべての公表された (つ
-# まり公開の) リストが載る.
-VIRTUAL_HOST_OVERVIEW = On
-
-
-# 補助関数; mm_cfg.py ファイルで使える. 省略可能な emailhost 引数を抜
-# かすと, urlhost から名前の最初を取り除いたものが設定される, たとえば
+# Mailman は, 少なくとも一つのドメイン名について知る必要がある.  これを
+# 「サイトの標準ドメイン」と言う.  Mailman で一つのドメインしか運用しな
+# いのなら, このドメインは通常, Mailman を configure するときに自動的に
+# 決定される.  このドメインはいつでも mailman.cfg で変えることができる.
+# また, 複数の仮想ドメインを使いたければ, mailman.cfg で仮想ドメインを追
+# 加すればいい.  どのメーリングリストも, 仮想ドメインのうちどれか一つだ
+# けに属する.
 #
-# add_virtualhost('www.dom.ain')
-# VIRTUAL_HOST['www.dom.ain']
-# ==> 'dom.ain'
+# Mailman では, 仮想ドメインが電子メールのホスト名と Web のホスト名とを
+# 関連づけている.  両者は同じでもいいが, 異なっていることもよくある.  リ
+# ストは完全な投稿アドレスで特定される [訳注: つまり, リスト名が同じ場合,
+# 電子メールのホスト名で区別される].  たとえば, 'mylist' を example.com
+# というドメインで作った場合, みんなは 'mylist@example.com' でリストに投
+# 稿する.  'www.example.com' で Web ページを見る.  だから, 電子メールのホ
+# スト名は 'example.com' で Web のホスト名は 'www.example.com' となる.
 #
-def add_virtualhost(urlhost, emailhost=None):
-    DOT = '.'
-    if emailhost is None:
-        emailhost = DOT.join(urlhost.split(DOT)[1:])
-    VIRTUAL_HOSTS[urlhost.lower()] = emailhost.lower()
-
-# で, ここで既定の設定をしておく.
-add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
+# 仮想ドメインを追加するには, mailman.cfg ファイルに
+# add_domain(email_host, url_host) の呼出しを書く.  add_domain() の呼出
+# しがまったくなければ, Mailman は自動的に下記の標準値を仮想ドメインに追
+# 加する.  なお, 自分で仮想ドメインを追加した場合は, 標準値も自分で追加
+# する必要がある.
+#
+# この標準値は configure が入れる.
+DEFAULT_EMAIL_HOST  = '@MAILHOST@'
+DEFAULT_URL_HOST    = '@URLHOST@'
 
 # 注意: すでにあるリストのドメインを変えるには、bin/fix_url.py を実行
-# するといいかもしれない. bin/fix_url.py スクリプトは, bin/withlist
+# するといい.  bin/fix_url.py スクリプトは, bin/withlist
 # の中で実行する, こんなふうに: bin/withlist -l -r bin/fix_url.py リスト名
 
+# [訳注] 2.2.0 からは, 完全な仮想ドメイン (リスト名がおなじでドメイン名
+#   のみ異なるものも許す) に対応した.  また, Web でのリスト一覧表示は常に
+#   同じ仮想ホストのものに限られるようになった.
+#   これにともない, VIRTUAL_HOSTS, VIRTUAL_HOST_OVERVIEW, add_virtualhost()
+#   [いずれも 2.1*] は廃止.
+#
+#   注意:
+#     2.1* の仮想ホストでは Web のホスト名で仮想ドメインを管理していた
+#     が, 2.2.0 からは投稿アドレスでリストを識別する.  したがって, リスト
+#     名に仮想ドメインを指定できるもの (newlist コマンドなど) では, 従来
+#     の "リスト名@Webのホスト名" の形式ではなく
+#     "リスト名@電子メールのホスト名" の形式で指定する.
 
 
 #####
@@ -244,7 +252,7 @@ DEFAULT_ARCHIVE_VOLUME_FREQUENCY = 1
 DEFAULT_DIGEST_VOLUME_FREQUENCY = 1    # [>=2.1]
 
 # これらの変数は, 外部の保存書庫作成プログラムを制御する. 通常は, 保存
-# 書庫作成が有効 (上の ARCHIVE_TO_MBOX と, リストの archive* 属性を参
+# 書庫作成が有効 (上の ARCHIVE_TO_MBOXと, リストの archive* 属性を参
 # 照) なら, 組込みの Pipermail 保存書庫作成プログラムを使う. これは以
 # 下の変数がどちらもNo に設定されているときの既定値. 以下のものをどれ
 # か設定するのなら, 値はos.popen() に渡せるシェルコマンドの文字列でな
@@ -1001,7 +1009,7 @@ ALLOW_OPEN_SUBSCRIBE = No
 
 # これは, リストの subscribe_policy が 2 や 3 であっても承認なしに入会
 # できるアドレスや (^ で始まっていれば) その正規表現の一覧の既定値
-# [>=CVS:2.138;svn:r7827].
+# [>=2.2.0].
 # [訳注: リストごとの値は subscribe_auto_approval 属性で変更できる.]
 DEFAULT_SUBSCRIBE_AUTO_APPROVAL = []
 
@@ -1337,44 +1345,16 @@ AuthListAdmin = 3     # リスト管理者 (あるリスト全体を制御)
 AuthListModerator = 4 # リスト司会者 (保留申請だけ扱える)
 AuthSiteAdmin = 5     # サイト管理者 (すべてを制御できる)
 
-# 役に立つディレクトリ名
-LIST_DATA_DIR   = os.path.join(VAR_PREFIX, 'lists')
-LOG_DIR         = os.path.join(VAR_PREFIX, 'logs')
-LOCK_DIR        = os.path.join(VAR_PREFIX, 'locks')
-DATA_DIR        = os.path.join(VAR_PREFIX, 'data')
-SPAM_DIR        = os.path.join(VAR_PREFIX, 'spam')
-WRAPPER_DIR     = os.path.join(EXEC_PREFIX, 'mail')
-BIN_DIR         = os.path.join(PREFIX, 'bin')
-SCRIPTS_DIR     = os.path.join(PREFIX, 'scripts')
-TEMPLATE_DIR    = os.path.join(PREFIX, 'templates')
-MESSAGES_DIR    = os.path.join(PREFIX, 'messages')
-PUBLIC_ARCHIVE_FILE_DIR  = os.path.join(VAR_PREFIX, 'archives', 'public')
-PRIVATE_ARCHIVE_FILE_DIR = os.path.join(VAR_PREFIX, 'archives', 'private')
-
-# Qrunner サブシステムが使うディレクトリ
-QUEUE_DIR       = os.path.join(VAR_PREFIX, 'qfiles')
-INQUEUE_DIR     = os.path.join(QUEUE_DIR, 'in')
-OUTQUEUE_DIR    = os.path.join(QUEUE_DIR, 'out')
-CMDQUEUE_DIR    = os.path.join(QUEUE_DIR, 'commands')
-BOUNCEQUEUE_DIR = os.path.join(QUEUE_DIR, 'bounces')
-NEWSQUEUE_DIR   = os.path.join(QUEUE_DIR, 'news')
-ARCHQUEUE_DIR   = os.path.join(QUEUE_DIR, 'archive')
-SHUNTQUEUE_DIR  = os.path.join(QUEUE_DIR, 'shunt')
-VIRGINQUEUE_DIR = os.path.join(QUEUE_DIR, 'virgin')
-BADQUEUE_DIR    = os.path.join(QUEUE_DIR, 'bad')
-RETRYQUEUE_DIR  = os.path.join(QUEUE_DIR, 'retry')     # [>=2.1.4]
-MAILDIR_DIR     = os.path.join(QUEUE_DIR, 'maildir')
-
-# その他役に立つファイル名
-PIDFILE = os.path.join(DATA_DIR, 'master-qrunner.pid')
-SITE_PW_FILE = os.path.join(DATA_DIR, 'adm.pw')
-LISTCREATOR_PW_FILE = os.path.join(DATA_DIR, 'creator.pw')
-
+# [訳注]
+#   2.2.0 からは, システムが使うさまざまなディレクトリやファイルのパス名
+#   は Mailman/configuration.py の中で PREFIX, VAR_PREFIX, EXEC_PREFIX 
+#   (この 3 つは mailman.cfg で既定値を上書きできる) から決定するように
+#   なった.
+                
 
 
 # バージョン番号関係をインポート
 from Version import *
-MAILMAN_VERSION = 'GNU Mailman ' + VERSION # [>=r7881]
 
 # Vgg: 言語の説明とキャラクタセットの辞書 [>=2.1]. なにかあたらしい言
 # 語に対応したらここに項目を付け加えなければいけない. キーは地域化した
@@ -1383,7 +1363,7 @@ MAILMAN_VERSION = 'GNU Mailman ' + VERSION # [>=r7881]
 # ト. このコードは私の GNU/Linux の /usr/share/locale からみつけて
 # きた :-) [訳注: その後も言語が追加されている.]
 # TK: 配布ターボールにある言語をサイト管理者が選んでインストールできる
-# ようにした [>= 2.2 alpha1] [訳注: 米国英語 (en) は必ずインストールさ
+# ようにした [>=2.2.0] [訳注: 米国英語 (en) は必ずインストールさ
 # れる].  mm_cfg.py の表記で後方互換性を取るために, add_language() 関
 # 数は変えていない.  配布物にない独自の言語を追加するときは, ソースファ
 # イルのディレクトリに言語のファイルを入れて '--with-languages' オプ
