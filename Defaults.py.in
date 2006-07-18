@@ -18,8 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.2.0a1 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r7929)
+# [訳注] このファイルは, Mailman 2.2.0xx 配布物に含まれる
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r7945)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -34,10 +34,10 @@
 # 詳しくは mm_cfg.py のコメントを見る.
 
 # [訳注] 2.2.0 から, 標準の設定ファイルは $VAR_PREFIX/etc/mailman.cfg
-#   となった (設定ファイルの場所を mailmactl の -C/--config オプションで
-#   指定することもできるようになった).  ファイルの書式は従来と変わらない
-#   が, 仮想ホストの設定などは書き直す必要がある.  従来の mm_cfg.py に書
-#   いた設定も反映されるが, mailman.cfg の設定が優先される.
+#   となった (設定ファイルの場所を mailmanctl の -C/--config オプション
+#   で指定することもできるようになった). ファイルの書式は従来と変わらな
+#   いが, 仮想ホストの設定などは書き直す必要がある. mailman.cfg がなけ
+#   れば, Mailman は mm_cfg.py を探してそれに書いてある設定を使う.
 
 import os
 
@@ -75,7 +75,7 @@ MAILMAN_URL = 'http://www.gnu.org/software/mailman/index.html'
 
 DEFAULT_URL_PATTERN = 'http://%s/mailman/'
 
-# このアドレスは, 自然な返信先をもたないようなコンポーネントからメッセー
+# このアドレスは, 返信先をもともともたないようなコンポーネントからメッセー
 # ジを発信する場合の発信元アドレス [>=2.2.0].  実在の人物のアドレスか
 # /dev/null にする.  アドレスのドメインには, リストのホスト名か, それが
 # つかえなければ DEFAULT_EMAIL_HOST がはいる.  このアドレスはバウンスを
@@ -125,13 +125,34 @@ HTML_TO_PLAIN_TEXT_COMMAND = '/usr/bin/lynx -dump %(filename)s'
 
 
 #####
+# データベースのオプション [>=2.2.0]
+#####
+
+# MemberAdaptor インタフェースを実装しているメンバシップ アダプタのうち,
+# 使いたいもののクラスの名前を指定する. まず, 旧来の, ピクルをつかった
+# アダプタ. Mailman 2.1 以前ではこれが標準だった.
+MEMBER_ADAPTOR_CLASS = 'Mailman.OldStyleMemberships.OldStyleMemberships'
+
+# つぎのは SQLAlchemy をつかったアダプタで, 会員データをすべて, 対応して
+# いるなんらかのリレーショナルデータベースに格納するようにする.
+#MEMBER_ADAPTOR_CLASS = 'Mailman.SAMemberships.SAMemberships'
+
+# SAMemberships アダプタを選んだのなら, この変数も設定してバックエンドの
+# データベースエンジンの接続 URL を指定する. リストのデータが格納してあ
+# るディレクトリが現れる箇所には $listdir を, またメーリングリスト名が現
+# れる箇所には $listname を書く.
+SQLALCHEMY_ENGINE_URL = 'sqlite:///$listdir/members.db'
+
+
+
+#####
 # 仮想ドメイン
 #####
 
 # Mailman は, 少なくとも一つのドメイン名について知る必要がある.  これを
 # 「サイトの標準ドメイン」と言う.  Mailman で一つのドメインしか運用しな
 # いのなら, このドメインは通常, Mailman を configure するときに自動的に
-# 決定される.  このドメインはいつでも mailman.cfg で変えることができる.
+# 決まってしまう. が, これはいつでも mailman.cfg で変えることができる.
 # また, 複数の仮想ドメインを使いたければ, mailman.cfg で仮想ドメインを追
 # 加すればいい.  どのメーリングリストも, 仮想ドメインのうちどれか一つだ
 # けに属する.
@@ -147,7 +168,7 @@ HTML_TO_PLAIN_TEXT_COMMAND = '/usr/bin/lynx -dump %(filename)s'
 # 仮想ドメインを追加するには, mailman.cfg ファイルに
 # add_domain(email_host, url_host) の呼出しを書く.  add_domain() の呼出
 # しがまったくなければ, Mailman は自動的に下記の標準値を仮想ドメインに追
-# 加する.  なお, 自分で仮想ドメインを追加した場合は, 標準値も自分で追加
+# 加する.  だが, 自分で仮想ドメインを追加した場合は, 標準値も自分で追加
 # する必要がある.
 #
 # この標準値は configure が入れる.
@@ -179,9 +200,9 @@ DEFAULT_URL_HOST    = '@URLHOST@'
 # この変数には, (ヘッダ, 正規表現) の形式の 2 要素のタプルのリストが入
 # る.  Mailman/Handlers/SpamDetect.py モジュールがこれを使って, 届いた
 # メッセージにマッチさせる. 届いたメッセージの指定されたヘッダにマッチ
-# したら, そのメッセージはスパムの判定が下る. ヘッダは大文字小文字を区
+# すれば, そのメッセージにスパムの判定を下す. ヘッダは大文字小文字を区
 # 別せず, 後ろのコロンは付けてはいけない. 正規表現はいつも 
-# re.IGNORECASE でマッチする.
+# re.IGNORECASE でマッチする [訳注: つまり, 大文字小文字を区別しない].
 #
 # 検索するものが多くなれば, 処理が全体として遅くなることに注意.  スパ
 # ム検出はリストに来るものだけでなく, -owners アドレスに来るものも含め, 
@@ -395,7 +416,7 @@ PUBLIC_MBOX = No
 # 警告: Sendmail モジュールはセキュリティホールがあるので避けること. 
 # というか, これを使おうというのならその前に,
 # Mailman/Handlers/Sendmail.py ファイルを読まなければいけない.
-# [訳注] Sendmail モジュール [<=2.1.*] は削除された.
+# [訳注] Sendmail モジュール [<=2.1*] は削除された.
 #
 #DELIVERY_MODULE = 'Sendmail'
 DELIVERY_MODULE = 'SMTPDirect'
@@ -529,8 +550,8 @@ GLOBAL_PIPELINE = [
     'CleanseDKIM',
     'CookHeaders',
     # それから, メッセージをまとめ読み用の mbox ファイル, 保存書庫, 
-    # ニューズのキューに送る. それぞれの runner が, それぞれの配送過程
-    # に応じたその後のメッセージの処理をする.
+    # ニューズのキューに送る.  それぞれの配送過程に応じたその後の
+    # メッセージの処理は, それぞれのランナがおこなう.
     'ToDigest',
     'ToArchive',
     'ToUsenet',
@@ -649,11 +670,11 @@ VERP_FORMAT = '%(bounces)s+%(mailbox)s=%(host)s'
 
 # 次の変数は, こういったアドレスを曖昧さなくデコードするための正規表現
 # を表す. 配送エラーを発生させた MTA は, このアドレスを配送エラーメッ
-# セージのTo: ヘッダに入れる. これを正しく取得することは重要 --- そし
-# て巧妙だ.  使っている Python の正規表現をよく調べること. これはちょ
-# うど 3 つの名前つきグループを定義しなければならない: bounces,
-# mailbox, host で, 定義は上の変数と同じ. これは大文字小文字の違いを無
-# 視してコンパイルされる.
+# セージのTo: ヘッダに入れる. 正しいアドレスを取得できる正規表現を書く
+# ことが肝要 --- だが, これは少々ややこしい. 使っている Python の正規
+# 表現をよく調べること. これはちょうど 3 つの名前つきグループを定義し
+# なければならない: bounces, mailbox, host で, 定義は上の変数と同じ.
+# 大文字小文字の違いは無視してコンパイルされる.
 VERP_REGEXP = r'^(?P<bounces>[^+]+?)\+(?P<mailbox>[^=]+)=(?P<host>[^@]+)@.*$'
 
 # メッセージを認識するための VERP 書式 [>=2.1.5]
@@ -717,12 +738,12 @@ MAX_AUTORESPONSES_PER_DAY = 10
 
 
 #####
-# Qrunner の既定値 [>=2.1]
+# キューランナの既定値 [>=2.1]
 #####
 
-# qrunner のマスタ監視プロセスが, どんなキューを起動するか. これは,
-# qrunner クラスの名前 (これは Mailman.Queue パッケージの中で同じ名前
-# のモジュールとして存在していなければならない) と, それぞれのqrunner 
+# キューランナのマスタ監視プロセスが, どんなキューを起動するか. これは,
+# キューランナのクラス名 (これは Mailman.Queue パッケージの中で同じ名前
+# のモジュールとして存在していなければならない) と, それぞれのキューランナ
 # のために fork する並行プロセスの数との, 2 要素のタプルのリストになる.
 # 1 個より多くのプロセスを使うと, それぞれがハッシュ空間の互いに等しい
 # 部分を取る.
@@ -745,7 +766,7 @@ QRUNNERS = [
 # たら, リスト自動検出を使わない MTA のためには bin/genaliases を再実
 # 行する必要がある.
 #
-# 警告: Maildir 配送を使いたいなら, Mailman の qrunner を /必ず/ root 
+# 警告: Maildir 配送を使いたいなら, Mailman のキューランナを /必ず/ root 
 # で開始しなければならない. そうしないとパーミッションの問題が出る.
 #
 # 注意: Maildir 配送は Mailman 2.1 では実験的.
@@ -754,10 +775,10 @@ USE_MAILDIR = No
 # を加える (もちろん, コメント記号は外す!)
 # QRUNNERS.append(('MaildirRunner', 1))
 
-# qrunner のスライスですべてのファイルを処理した後, またキューのディレ
-# クトリに新しいファイルがあるか調べるまでに, どのくらいの間 runner を 
-# sleep させるか. これは秒未満にもできる. また, ゼロにすればすぐ調べる
-# (essentially busy-loop as fast as possible) ようになる.
+# キューランナのあるスライスですべてのファイルを処理した後, またキュー
+# のディレクトリに新しいファイルがあるか調べるまでに, どのくらいの間ラ
+# ンナを sleep させるか. これは秒未満にもできる. また, ゼロにすればすぐ
+# 調べる (要するに, できるだけ休まずくりかえし調べ続ける) ようになる.
 QRUNNER_SLEEP_TIME = seconds(1)
 
 # (email パッケージで) 解析できないようなメッセージを受け取ったときに, 
@@ -1134,7 +1155,7 @@ PLAIN_DIGEST_KEEP_HEADERS = [
 # 全部配送エラー処理をするか.
 DEFAULT_BOUNCE_PROCESSING = Yes
 
-# 配送エラーを検出してキューに入れてあるものを, bounce runner が
+# 配送エラーを検出してキューに入れてあるものを, bounce ランナが
 # どのくらいの頻度で処理するか. [>=2.1.5]
 REGISTER_BOUNCES_EVERY = minutes(15)
 
@@ -1225,7 +1246,7 @@ DELIVERY_RETRY_WAIT = hours(1)
 # 要な調整用変数のひとつだ.
 LIST_LOCK_LIFETIME = hours(5)
 
-# この変数は, 外界から来るメッセージを受け取る qrunner プロセスがリス
+# この変数は, 外界から来るメッセージを受け取るキューランナ プロセスがリス
 # トのロック獲得をどれだけの間試みるかを指定する. ロック獲得が時間切れ
 # になると, メッセージは再びキューに戻されてつぎの配送を待つ.
 LIST_LOCK_TIMEOUT = seconds(10)
@@ -1238,7 +1259,7 @@ PENDINGDB_LOCK_DEBUGGING = Off
 
 # [訳注] PENDINGDB_LOCK_TIMEOUT [>=2.1.2 && <=2.1.4] と
 # PENDINGDB_LOCK_ATTEMPTS [>=2.1.2 && <=2.1.4] は廃止。
-# [訳注] LIST_LOCK_DEBUGGING [<=2.1.*] は廃止. 'mailman.locks' ロガー
+# [訳注] LIST_LOCK_DEBUGGING [<=2.1*] は廃止. 'mailman.locks' ロガー
 # を使うことになった.
 
 
