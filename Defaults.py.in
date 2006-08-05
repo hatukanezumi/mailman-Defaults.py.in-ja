@@ -18,14 +18,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.1.8 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での CVS リビジョンは 2.112.2.37)
+# [訳注] このファイルは, Mailman 2.1.x 配布物に含まれる
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは 7965)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
 #   確な理解のためには, 配布物に含まれる原文を参照されることをお勧めし
 #   ます.
-#   訳者: IKEDA Soji <nezumi@poem.co.jp>
+#   訳者: IKEDA Soji <hatuka@nezumi.nu>
 
 """配布時点の Mailman の重要な設定変数の既定値."""
 
@@ -1409,6 +1409,7 @@ LC_DESCRIPTIONS = {}
 def add_language(code, description, charset):
     LC_DESCRIPTIONS[code] = (description, charset)
 
+add_language('ar',    _('Arabic'),              'utf-8')
 add_language('ca',    _('Catalan'),             'iso-8859-1')
 add_language('cs',    _('Czech'),               'iso-8859-2')
 add_language('da',    _('Danish'),              'iso-8859-1')
@@ -1438,6 +1439,7 @@ add_language('sl',    _('Slovenian'),           'iso-8859-2')
 add_language('sv',    _('Swedish'),             'iso-8859-1')
 add_language('tr',    _('Turkish'),             'iso-8859-9')
 add_language('uk',    _('Ukrainian'),           'utf-8')
+add_language('vi',    _('Vietnamese'),          'utf-8')
 add_language('zh_CN', _('Chinese (China)'),     'utf-8')
 add_language('zh_TW', _('Chinese (Taiwan)'),    'utf-8')
 
