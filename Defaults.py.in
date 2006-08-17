@@ -903,6 +903,21 @@ ADMIN_PASSWORD_LENGTH = 10
 # *変わらない*. ここでは, 今後作成する新しいリストの既定値を定義するだけ.
 #####
 
+# [訳注]
+#   この箇所に限らず, このファイル中に現れる設定変数のうち "DEFAULT_"
+#   で始まるものの設定値は, 対応する名前の MailList オブジェクトの属性
+#   の, リストを新規作成するときの既定値となる (そのおおくは, その後リ
+#   スト管理ページでリスト管理者が変更できる). たとえば
+#   DEFAULT_SUBJECT_PREFIX と subject_prefix のように. ただし, つぎのも
+#   のは例外 ---
+#   o DEFAULT_URL_PATTERN, DEFAULT_EMAIL_HOST, DEFAULT_URL_HOST,
+#     DEFAULT_HOST_NAME, DEFAULT_URL, DEFAULT_CHARSET. これらはリスト
+#     の新規作成時既定値ではない. 各設定変数の説明を参照.
+#   o DEFAULT_SERVER_LANGUAGE. これは preferred_language 属性の既定値.
+#     また, 処理の対象となるリストやユーザの言語が特定できない場合にも
+#     使われる.
+#   o DEFAULT_LIST_ADVERTISED. これは advertised 属性の既定値.
+
 # リストは, 既定で公表するかどうか. 明示される宛先で許される数の最大は
 # 既定でいくつか. 既定で許されるメッセージサイズの最大はいくつか.
 DEFAULT_LIST_ADVERTISED = Yes
@@ -1034,7 +1049,6 @@ ALLOW_OPEN_SUBSCRIBE = No
 # これは, リストの subscribe_policy が 2 や 3 であっても承認なしに入会
 # できるアドレスや (^ で始まっていれば) その正規表現の一覧の既定値
 # [>=2.2.0].
-# [訳注: リストごとの値は subscribe_auto_approval 属性で変更できる.]
 DEFAULT_SUBSCRIBE_AUTO_APPROVAL = []
 
 # 退会の既定の方針. 0 (承認なしの退会) を強くお勧めする! [>=2.1]
