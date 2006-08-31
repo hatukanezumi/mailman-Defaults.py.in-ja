@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.1.x 配布物に含まれる
+# [訳注] このファイルは, Mailman 2.1.9 配布物に含まれる
 #   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは 7965)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
