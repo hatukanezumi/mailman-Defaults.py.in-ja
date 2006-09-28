@@ -18,8 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.2.0xx 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8042)
+# [訳注] このファイルは, Mailman 2.2xx 配布物に含まれる
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8043)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -33,7 +33,7 @@
 # そういったことは, かならず mm_cfg.py の指定された範囲に書くこと.
 # 詳しくは mm_cfg.py のコメントを見る.
 
-# [訳注] 2.2.0 から, 標準の設定ファイルは $VAR_PREFIX/etc/mailman.cfg
+# [訳注] 2.2 から, 標準の設定ファイルは $VAR_PREFIX/etc/mailman.cfg
 #   となった (設定ファイルの場所を mailmanctl の -C/--config オプション
 #   で指定することもできるようになった). ファイルの書式は従来と変わらな
 #   いが, 仮想ホストの設定などは書き直す必要がある. mailman.cfg がなけ
@@ -76,18 +76,18 @@ MAILMAN_URL = 'http://www.gnu.org/software/mailman/index.html'
 DEFAULT_URL_PATTERN = 'http://%s/mailman/'
 
 # このアドレスは, 返信先をもともともたないようなコンポーネントからメッセー
-# ジを発信する場合の発信元アドレス [>=2.2.0].  実在の人物のアドレスか
+# ジを発信する場合の発信元アドレス [>=2.2].  実在の人物のアドレスか
 # /dev/null にする.  アドレスのドメインには, リストのホスト名か, それが
 # つかえなければ DEFAULT_EMAIL_HOST がはいる.  このアドレスでバウンスを
 # 発生させてはならない.  また, Mailman のなにかの機能を指すようにしては
 # ならない.
 NO_REPLY_ADDRESS = 'noreply'
 
-# このアドレスは "サイト管理者" のアドレス [>=2.2.0].  人間に送らなければ
+# このアドレスは "サイト管理者" のアドレス [>=2.2].  人間に送らなければ
 # ばいけないがリスト管理者には送れないようなメッセージ (例: リスト管理者
 # からのバウンス) は, このアドレスに送る.  これは実在の人物を指していなけ
 # ればいけない.
-# [訳注] 2.2.0 からは, 「サイト全体のメーリングリスト」(既定では
+# [訳注] 2.2 からは, 「サイト全体のメーリングリスト」(既定では
 #   "mailman" というリスト) が不要になった.  これにともない
 #   MAILMAN_SITE_LIST [<=2.1*] は廃止.  サイト全体のリストは削除しても
 #   かまわない.  かわりに, この SITE_OWNER_ADDRESS をサイト管理者に 向け
@@ -125,7 +125,7 @@ HTML_TO_PLAIN_TEXT_COMMAND = '/usr/bin/lynx -dump %(filename)s'
 
 
 #####
-# データベースの選択 [>=2.2.0]
+# データベースの選択 [>=2.2]
 #####
 
 # MemberAdaptor インタフェースを実装している会員情報アダプタのうち, 使い
@@ -179,7 +179,7 @@ DEFAULT_URL_HOST    = '@URLHOST@'
 # するといい.  bin/fix_url.py スクリプトは, bin/withlist
 # の中で実行する, こんなふうに: bin/withlist -l -r bin/fix_url.py リスト名
 
-# [訳注] 2.2.0 からは, 完全な仮想ドメイン (リスト名がおなじでドメイン名
+# [訳注] 2.2 からは, 完全な仮想ドメイン (リスト名がおなじでドメイン名
 #   のみ異なるものも許す) に対応した.  また, Web でのリスト一覧表示は常に
 #   同じ仮想ホストのものに限られるようになった.
 #   これにともない, VIRTUAL_HOSTS, VIRTUAL_HOST_OVERVIEW, add_virtualhost()
@@ -187,7 +187,7 @@ DEFAULT_URL_HOST    = '@URLHOST@'
 #
 #   注意:
 #     2.1* の仮想ホストでは Web のホスト名で仮想ドメインを管理していた
-#     が, 2.2.0 からは投稿アドレスでリストを識別する.  したがって, リスト
+#     が, 2.2 からは投稿アドレスでリストを識別する.  したがって, リスト
 #     名に仮想ドメインを指定できるもの (newlist コマンドなど) では, 従来
 #     の "リスト名@Webのホスト名" の形式ではなく
 #     "リスト名@電子メールのホスト名" の形式で指定する.
@@ -451,6 +451,10 @@ MTA = 'Manual'
 # README.POSTFIX の内容は, 2.1.6 以降は上記『インストールマニュアル』
 # に移された].
 POSTFIX_STYLE_VIRTUAL_DOMAINS = []
+
+# aliases と mailman-virtual のどちらのファイルでも, list-etc@dom2.ain
+# の '@' のかわりになにか別の区切りを使わなければいけない.
+POSTFIX_VIRTUAL_SEPARATOR = '_at_'
 
 # これらの変数は, それぞれ aliases.db および virtual-mailman.db を,
 # 関連するプレインテキストファイルから再構築するのに使うプログラムを示す. 
@@ -1054,7 +1058,7 @@ ALLOW_OPEN_SUBSCRIBE = No
 
 # これは, リストの subscribe_policy が 2 や 3 であっても承認なしに入会
 # できるアドレスや (^ で始まっていれば) その正規表現の一覧の既定値
-# [>=2.2.0].
+# [>=2.2].
 DEFAULT_SUBSCRIBE_AUTO_APPROVAL = []
 
 # 退会の既定の方針. 0 (承認なしの退会) を強くお勧めする! [>=2.1]
@@ -1390,7 +1394,7 @@ AuthListModerator = 4 # リスト司会者 (保留申請だけ扱える)
 AuthSiteAdmin = 5     # サイト管理者 (すべてを制御できる)
 
 # [訳注]
-#   2.2.0 からは, システムが使うさまざまなディレクトリやファイルのパス名
+#   2.2 からは, システムが使うさまざまなディレクトリやファイルのパス名
 #   は Mailman/configuration.py の中で PREFIX, VAR_PREFIX, EXEC_PREFIX 
 #   (この 3 つは mailman.cfg で既定値を上書きできる) から決定するように
 #   なった.
@@ -1407,7 +1411,7 @@ from Version import *
 # ト. このコードは私の GNU/Linux の /usr/share/locale からみつけて
 # きた :-) [訳注: その後も言語が追加されている.]
 # TK: 配布ターボールにある言語をサイト管理者が選んでインストールできる
-# ようにした [>=2.2.0] [訳注: 米国英語 (en) は必ずインストールさ
+# ようにした [>=2.2] [訳注: 米国英語 (en) は必ずインストールさ
 # れる].  mm_cfg.py の表記で後方互換性を取るために, add_language() 関
 # 数は変えていない.  配布物にない独自の言語を追加するときは, ソースファ
 # イルのディレクトリに言語のファイルを入れて '--with-languages' オプ
