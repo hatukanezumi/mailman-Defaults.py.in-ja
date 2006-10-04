@@ -19,7 +19,7 @@
 # USA.
 
 # [訳注] このファイルは, Mailman 2.2xx 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8043)
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8049)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -787,6 +787,27 @@ USE_MAILDIR = No
 # 注意: USE_MAILDIR = Yes に設定するのなら, mm_cfg.py ファイルに次の行
 # を加える (もちろん, コメント記号は外す!)
 # QRUNNERS.append(('MaildirRunner', 1))
+
+# ここを Yes に設定すると, `LMTP' 配送オプションを使う [>=2.2]. ここを
+# 変えたら, リストの自動認識を使っていない MTA では bin/genaliases を
+# 再実行する必要がある.
+#
+# Postfix では, main.cf に次の行を入れなければいけない:
+#     transport_maps = hash:<prefix>/data/transport
+# さらに, リストが $mydestination に入っているなら次の行も必要:
+#     alias_maps = hash:/etc/aliases, hash:<prefix>/data/aliases
+#
+# 注意: LMTP 配送は Mailman 2.2 では実験的.
+USE_LMTP = No
+# 注意: USE_LMTP = Yes と設定したら, mailman.cfg ファイルに次の行を入
+# れる (もちろん, コメント記号は外して, だが):
+# QRUNNERS.append(('LMTPRunner', 1))
+
+# LMTP_HOST と LMTP_PORT は都合にあわせて変えられる [>=2.2].
+# ポートをグローバルアドレスのネットワークインタフェースで開放している
+# のなら, 十分注意してファイアウォールを使うなどしなければいけない.
+LMTP_HOST = 'localhost'
+LMTP_PORT = 8025
 
 # キューランナのあるスライスですべてのファイルを処理した後, またキュー
 # のディレクトリに新しいファイルがあるか調べるまでに, どのくらいの間ラ
