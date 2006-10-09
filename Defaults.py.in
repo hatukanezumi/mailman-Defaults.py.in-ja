@@ -19,7 +19,7 @@
 # USA.
 
 # [訳注] このファイルは, Mailman 2.2xx 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8049)
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8052)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -808,6 +808,16 @@ USE_LMTP = No
 # のなら, 十分注意してファイアウォールを使うなどしなければいけない.
 LMTP_HOST = 'localhost'
 LMTP_PORT = 8025
+
+# 実験的な WSGI サーバ.
+# これをするには, Apache httpd サーバの PROXY を有効にして, 以下のよう
+# に mailman の CGI へのリクエストをこの WSGI サーバに渡すように設定し
+# なければいけない:
+#     ProxyPass /mailman/ http://localhost:2580/
+HTTP_HOST = 'localhost'
+HTTP_PORT = 2580
+# さらに, 次の行を <prefix>/etc/mailman.cfg に加えなければいけない:
+# QRUNNERS.append(('HTTPRunner', 1))
 
 # キューランナのあるスライスですべてのファイルを処理した後, またキュー
 # のディレクトリに新しいファイルがあるか調べるまでに, どのくらいの間ラ
