@@ -19,7 +19,7 @@
 # USA.
 
 # [訳注] このファイルは, Mailman 2.2xx 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8052)
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8083)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -35,9 +35,11 @@
 
 # [訳注] 2.2 から, 標準の設定ファイルは $VAR_PREFIX/etc/mailman.cfg
 #   となった (設定ファイルの場所を mailmanctl の -C/--config オプション
-#   で指定することもできるようになった). ファイルの書式は従来と変わらな
-#   いが, 仮想ホストの設定などは書き直す必要がある. mailman.cfg がなけ
-#   れば, Mailman は mm_cfg.py を探してそれに書いてある設定を使う.
+#   で指定することもできるようになった).  mailman.cfg がなければ,
+#   Mailman は mm_cfg.py を探してそれに書いてある設定を使う.
+#   設定ファイルの書式は従来と変わらないが, 一部 (仮想ドメインなど) の
+#   設定は書き直す必要がある.  変更点や注意すべき点を適宜「訳注」として
+#   挿入した.  また, 各設定変数が導入されたバージョンを [...] 内に示す.
 
 import os
 
@@ -181,12 +183,12 @@ DEFAULT_URL_HOST    = '@URLHOST@'
 
 # [訳注] 2.2 からは, 完全な仮想ドメイン (リスト名がおなじでドメイン名
 #   のみ異なるものも許す) に対応した.  また, Web でのリスト一覧表示は常に
-#   同じ仮想ホストのものに限られるようになった.
+#   同じ仮想ドメインのものに限られるようになった.
 #   これにともない, VIRTUAL_HOSTS, VIRTUAL_HOST_OVERVIEW, add_virtualhost()
 #   [いずれも 2.1*] は廃止.
 #
 #   注意:
-#     2.1* の仮想ホストでは Web のホスト名で仮想ドメインを管理していた
+#     2.1* の仮想ドメインでは Web のホスト名で仮想ドメインを管理していた
 #     が, 2.2 からは投稿アドレスでリストを識別する.  したがって, リスト
 #     名に仮想ドメインを指定できるもの (newlist コマンドなど) では, 従来
 #     の "リスト名@Webのホスト名" の形式ではなく
@@ -809,15 +811,19 @@ USE_LMTP = No
 LMTP_HOST = 'localhost'
 LMTP_PORT = 8025
 
-# 実験的な WSGI サーバ.
+# 実験的な WSGI サーバ [>=2.2].
 # これをするには, Apache httpd サーバの PROXY を有効にして, 以下のよう
 # に mailman の CGI へのリクエストをこの WSGI サーバに渡すように設定し
 # なければいけない:
 #     ProxyPass /mailman/ http://localhost:2580/
-HTTP_HOST = 'localhost'
-HTTP_PORT = 2580
+#
+# XXX Apache 2.2 で運用しているのなら, たぶん ProxyPassReverseCookiePath
+# も設定することになる.
+#
 # さらに, 次の行を <prefix>/etc/mailman.cfg に加えなければいけない:
 # QRUNNERS.append(('HTTPRunner', 1))
+HTTP_HOST = 'localhost'
+HTTP_PORT = 2580
 
 # キューランナのあるスライスですべてのファイルを処理した後, またキュー
 # のディレクトリに新しいファイルがあるか調べるまでに, どのくらいの間ラ
@@ -970,7 +976,7 @@ DEFAULT_MAX_MESSAGE_SIZE = 40           # キロバイト
 # [訳注]
 #   2.1.6 以降, DEFAULT_SUBJECT_PREFIX に %d を含めると通し番号が
 #   入るようになった. %04d といった書式も使える.
-#   mm_cfg.py で設定するときは %%d のように書かなければならないことに
+#   mailman.cfg で設定するときは %%d のように書かなければならないことに
 #   注意.
 DEFAULT_SUBJECT_PREFIX  = "[%(real_name)s] "
 # DEFAULT_SUBJECT_PREFIX = "[%(real_name)s %%d]" # 通し番号をつける場合
@@ -1428,7 +1434,8 @@ AuthSiteAdmin = 5     # サイト管理者 (すべてを制御できる)
 #   2.2 からは, システムが使うさまざまなディレクトリやファイルのパス名
 #   は Mailman/configuration.py の中で PREFIX, VAR_PREFIX, EXEC_PREFIX 
 #   (この 3 つは mailman.cfg で既定値を上書きできる) から決定するように
-#   なった.
+#   なった.  これまで *_DIR および *_FILE という名前の設定変数で個別の
+#   パスを変更していた場合, その設定は無効となる.
                 
 
 
