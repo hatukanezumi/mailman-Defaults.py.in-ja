@@ -244,11 +244,14 @@ WEB_HIGHLIGHT_COLOR = '#dddddd'                   # 真なら, listinfo と admin
 # 公開保存書庫の URL のテンプレート [>=2.1]. これはいくつかの場所で使う:
 # List-Archive: ヘッダ, リストの listinfo ページ, リストの管理ページで.
 #
-# これは "%(listname)s" がどこかに入った文字列でなければいけな
-# い. Mailman はここにリストの名前を代入する. 文字列に "%(hostname)s" 
-# をいれることもできる.  Mailman はここにホスト名 (たいてい 
-# DEFAULT_URL_HOST) を代入する.
-PUBLIC_ARCHIVE_URL = 'http://%(hostname)s/pipermail/%(listname)s'
+# この変数は次のような置き換え変数に対応している [>=2.2]
+# - $hostname       -- 保存書庫のあるホスト
+# - $listname       -- アクセスしているリストの短い名前
+# - $fqdn_listname  -- アクセスしているリストの長い名前
+# [訳注] 2.1* では, 置き換え文字列としてそれぞれ "%(hostname)s",
+#   "%(listname)s" を入れることになっていた ("$fqdn_listname" にあたるも
+#   のはなかった).
+PUBLIC_ARCHIVE_URL = 'http://$hostname/pipermail/$fqdn_listname'
 
 # 保存書庫が既定で有効かどうか.
 DEFAULT_ARCHIVE = On
@@ -455,7 +458,7 @@ MTA = 'Manual'
 POSTFIX_STYLE_VIRTUAL_DOMAINS = []
 
 # aliases と mailman-virtual のどちらのファイルでも, list-etc@dom2.ain
-# の '@' のかわりになにか別の区切りを使わなければいけない.
+# の '@' のかわりになにか別の区切りを使わなければいけない [>=2.2].
 POSTFIX_VIRTUAL_SEPARATOR = '_at_'
 
 # これらの変数は, それぞれ aliases.db および virtual-mailman.db を,
