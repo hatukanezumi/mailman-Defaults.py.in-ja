@@ -19,7 +19,7 @@
 # USA.
 
 # [訳注] このファイルは, Mailman 2.2xx 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8083)
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8101)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -806,7 +806,7 @@ USE_MAILDIR = No
 USE_LMTP = No
 # 注意: USE_LMTP = Yes と設定したら, mailman.cfg ファイルに次の行を入
 # れる (もちろん, コメント記号は外して, だが):
-# QRUNNERS.append(('LMTPRunner', 1))
+# add_runner('LMTPRunner')
 
 # LMTP_HOST と LMTP_PORT は都合にあわせて変えられる [>=2.2].
 # ポートをグローバルアドレスのネットワークインタフェースで開放している
@@ -814,17 +814,30 @@ USE_LMTP = No
 LMTP_HOST = 'localhost'
 LMTP_PORT = 8025
 
+# LMTP mailman だけで動作するドメインの名前 [>=2.2].
+# 現時点では Postfix のエイリアス生成でだけ使う.
+LMTP_ONLY_DOMAINS = []
+
+# LMTP_ONLY_DOMAINS 内にないリストについては, LMTPRunner はマスタの SMTP
+# エージェントに対して 550 応答を返す. これは「バウンスによるスパムのリ
+# レー」をひき起こしうる. スパム送信者がこれによって 'From:' アドレスに
+# メッセージをバウンスとして配送しようとするのだ.
+# LMTP_ERR_550 = '250 Ok. But, blackholed because mailbox unavailable'
+# と設定すれば, この挙動を変えることができる [>=2.2].
+LMTP_ERR_550 = '550 Requested action not taken: mailbox unavailable'
+
 # 実験的な WSGI サーバ [>=2.2].
 # これをするには, Apache httpd サーバの PROXY を有効にして, 以下のよう
 # に mailman の CGI へのリクエストをこの WSGI サーバに渡すように設定し
 # なければいけない:
-#     ProxyPass /mailman/ http://localhost:2580/
+#     ProxyPass /mailman/ http://localhost:2580/mailman/
 #
+# ローカル URI 部が同じでなければいけないことに注意.
 # XXX Apache 2.2 で運用しているのなら, たぶん ProxyPassReverseCookiePath
 # も設定することになる.
 #
 # さらに, 次の行を <prefix>/etc/mailman.cfg に加えなければいけない:
-# QRUNNERS.append(('HTTPRunner', 1))
+# add_runner('HTTPRunner')
 HTTP_HOST = 'localhost'
 HTTP_PORT = 2580
 
