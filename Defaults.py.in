@@ -19,7 +19,7 @@
 # USA.
 
 # [訳注] このファイルは, Mailman 2.2xx 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8101)
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8105)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -678,6 +678,7 @@ SMTP_LOG_EACH_FAILURE = (
 #
 # MTA が, /必ず/ こういったアドレスを mylist-bounces に配送するように
 # 設定するよう注意!
+VERP_DELIMITER = '+' # [>=2.2]
 VERP_FORMAT = '%(bounces)s+%(mailbox)s=%(host)s'
 
 # 次の変数は, こういったアドレスを曖昧さなくデコードするための正規表現
