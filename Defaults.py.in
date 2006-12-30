@@ -19,7 +19,7 @@
 # USA.
 
 # [訳注] このファイルは, Mailman 2.2xx 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8105)
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8123)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -130,20 +130,19 @@ HTML_TO_PLAIN_TEXT_COMMAND = '/usr/bin/lynx -dump %(filename)s'
 # データベースの選択 [>=2.2]
 #####
 
-# MemberAdaptor インタフェースを実装している会員情報アダプタのうち, 使い
-# たいもののクラス名を指定する. まず, 旧来の, ピクルをつかったアダプタ.
-# Mailman 2.1 以前ではこれが標準だった.
+# これで SQLAlchemy データベースエンジンの URL を設定する.  ふつうは,
+# Mailman 全体に対してひとつ, プライマリのデータベース接続があればよい.
+# リストのデータとほとんどの会員情報のデータをこのデータベースに格納す
+# る.  なお, 外部の会員情報については別のやりかたでほかのデータベース
+# にアクセスするようにもできる.  この文字列では Configuration オブジェ
+# クトの変数であればなんでも置き換えができる.
+SQLALCHEMY_ENGINE_URL = 'sqlite:///$DATA_DIR/mailman.db'
+
+# デバッグ目的
+SQLALCHEMY_ECHO = False
+
+# XXX REMOVE ME
 MEMBER_ADAPTOR_CLASS = 'Mailman.OldStyleMemberships.OldStyleMemberships'
-
-# つぎのは SQLAlchemy をつかったアダプタで, 会員データをすべて, 対応して
-# いるなんらかのリレーショナルデータベースに格納するようにする.
-#MEMBER_ADAPTOR_CLASS = 'Mailman.SAMemberships.SAMemberships'
-
-# SAMemberships アダプタを選んだときは, この変数も設定してバックエンドの
-# データベースエンジンの接続 URL を指定する. リストのデータが格納してあ
-# るディレクトリが現れる箇所には $listdir を, またメーリングリスト名が現
-# れる箇所には $listname を書く.
-SQLALCHEMY_ENGINE_URL = 'sqlite:///$listdir/members.db'
 
 
 
