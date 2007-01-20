@@ -1,7 +1,7 @@
 # -*- python -*-
 # -*- coding: euc-jp -*-
 
-# Copyright (C) 1998-2006 by the Free Software Foundation, Inc.
+# Copyright (C) 1998-2007 by the Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,8 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.2xx 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8123)
+# [訳注] このファイルは, Mailman 2.2 配布物に含まれる
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは r8144)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -123,6 +123,11 @@ ALLOW_SITE_ADMIN_COOKIES = No
 # 標準出力に出力しなければいけない. %(filename)s には, プログラムが
 # 処理する一時ファイルの名前が入る.
 HTML_TO_PLAIN_TEXT_COMMAND = '/usr/bin/lynx -dump %(filename)s'
+
+# 標準のパスワードハッシュ方式 [>=2.2].  利用できる方式の一覧は
+# 'bin/mmsitepass -P' を見る [訳注: 2.1* では ssha がハードコードされ
+# ていた].
+PASSWORD_SCHEME = 'ssha'
 
 
 
@@ -445,15 +450,14 @@ MTA = 'Manual'
 # 数も設定してほしい. [>=2.1]
 # Postfix で仮想ドメインを使っていないか, または Sendmail スタイルの仮
 # 想ドメイン (すべてのアドレスがすべての仮想ドメインから見える) を使っ
-# ているのなら, このフラグを偽に設定する.
+# ているのなら, このフラグを空のリスト [訳注: つまり []] に設定する.
 # Postfix スタイルの仮想ドメイン (エイリアスがそれぞれの仮想ドメインの
 # 中だけに現れる) を使っているのなら, この変数を host_name の値のリス
 # トに設定して, 仮想のエントリを分離する. つまり, dom1.ain, dom2.ain,
 # dom3.ain を運用しているが dom2 と dom3 だけが仮想なら, この変数をリ
 # スト ['dom2.ain', 'dom3.ain'] に設定する. これはメーリングリストの 
-# host_name 属性にマッチさせられる. 詳細は README.POSTFIX を見る[訳注:
-# README.POSTFIX の内容は, 2.1.6 以降は上記『インストールマニュアル』
-# に移された].
+# host_name 属性にマッチさせられる. 詳細は『インストールマニュアル』の
+# Postfix の節を見る.
 POSTFIX_STYLE_VIRTUAL_DOMAINS = []
 
 # aliases と mailman-virtual のどちらのファイルでも, list-etc@dom2.ain
@@ -759,39 +763,28 @@ MAX_AUTORESPONSES_PER_DAY = 10
 # キューランナの既定値 [>=2.1]
 #####
 
-# キューランナのマスタ監視プロセスが, どんなキューを起動するか. これは,
-# キューランナのクラス名 (これは Mailman.Queue パッケージの中で同じ名前
-# のモジュールとして存在していなければならない) と, それぞれのキューランナ
-# のために fork する並行プロセスの数との, 2 要素のタプルのリストになる.
+# キューランナのマスタ監視プロセスが, どんなキューを起動するか.
+# add_qrunners() [>=2.2] は必須の引数をひとつ取る.  起動するキューラン
+# ナの名前 (大文字にする. また後ろの「Runner」は取る) だ. 2 つめの引数
+# はなくてもよいが、キューランナごとに fork する並行プロセスの数となる.
 # 1 個より多くのプロセスを使うと, それぞれがハッシュ空間の互いに等しい
-# 部分を取る.
-
-# BAW: そのうち重み付けのあるハッシュ空間に対応するかも
-# BAW: 強制ではないが, スライスの数は 2 の累乗であるべき
-
-QRUNNERS = [
-    ('ArchRunner',     1), # 保存書庫作成に行くメッセージ
-    ('BounceRunner',   1), # qfile/bounces ディレクトリの処理のため
-    ('CommandRunner',  1), # 外界から来るコマンドと配送エラー
-    ('IncomingRunner', 1), # 外界から来る投稿
-    ('NewsRunner',     1), # nntpd へ送り出すメッセージ
-    ('OutgoingRunner', 1), # smtpd へ送り出すメッセージ
-    ('VirginRunner',   1), # 内部的に作り出した (できたての) メッセージ
-    ('RetryRunner',    1), # 一時的に失敗した配送の再試行 [>=2.1.4]
-    ]
-
-# ここを Yes に設定すると, `Maildir` 配送オプションを使う. これを変え
-# たら, リスト自動検出を使わない MTA のためには bin/genaliases を再実
-# 行する必要がある.
+# 部分を取るので, この数は 2 の累乗でなければいけない [訳注: 2.1* では
+# 2 の累乗でなくてもよいとされていた].
+#
+# del_qrunners() [>=2.2] は, 引数をひとつ取る. これは, 開始しないキュー
+# ランナの名前.  Mailman は標準では Arch, Bounce, Command, Incoming,
+# News, Outgoing, Retry, Virgin の各キューを開始するので, [開始したくな
+# いものがあれば] この関数を使う.
+#
+# [訳注] QRUNNERS 設定変数は廃止.
+#
+# ここを Yes に設定すると, `Maildir` 配送オプションを使う [>=2.1]. これ
+# を変えたら, リスト自動検出を使わない MTA のためには bin/genaliases を
+# 再実行する必要がある.
 #
 # 警告: Maildir 配送を使いたいなら, Mailman のキューランナを /必ず/ root 
 # で開始しなければならない. そうしないとパーミッションの問題が出る.
-#
-# 注意: Maildir 配送は Mailman 2.1 では実験的.
 USE_MAILDIR = No
-# 注意: USE_MAILDIR = Yes に設定するのなら, mm_cfg.py ファイルに次の行
-# を加える (もちろん, コメント記号は外す!)
-# QRUNNERS.append(('MaildirRunner', 1))
 
 # ここを Yes に設定すると, `LMTP' 配送オプションを使う [>=2.2]. ここを
 # 変えたら, リストの自動認識を使っていない MTA では bin/genaliases を
@@ -801,12 +794,7 @@ USE_MAILDIR = No
 #     transport_maps = hash:<prefix>/data/transport
 # さらに, リストが $mydestination に入っているなら次の行も必要:
 #     alias_maps = hash:/etc/aliases, hash:<prefix>/data/aliases
-#
-# 注意: LMTP 配送は Mailman 2.2 では実験的.
 USE_LMTP = No
-# 注意: USE_LMTP = Yes と設定したら, mailman.cfg ファイルに次の行を入
-# れる (もちろん, コメント記号は外して, だが):
-# add_runner('LMTPRunner')
 
 # LMTP_HOST と LMTP_PORT は都合にあわせて変えられる [>=2.2].
 # ポートをグローバルアドレスのネットワークインタフェースで開放している
@@ -826,7 +814,7 @@ LMTP_ONLY_DOMAINS = []
 # と設定すれば, この挙動を変えることができる [>=2.2].
 LMTP_ERR_550 = '550 Requested action not taken: mailbox unavailable'
 
-# 実験的な WSGI サーバ [>=2.2].
+# WSGI サーバ [>=2.2].
 # これをするには, Apache httpd サーバの PROXY を有効にして, 以下のよう
 # に mailman の CGI へのリクエストをこの WSGI サーバに渡すように設定し
 # なければいけない:
@@ -837,7 +825,7 @@ LMTP_ERR_550 = '550 Requested action not taken: mailbox unavailable'
 # も設定することになる.
 #
 # さらに, 次の行を <prefix>/etc/mailman.cfg に加えなければいけない:
-# add_runner('HTTPRunner')
+# add_qrunner('HTTP')
 HTTP_HOST = 'localhost'
 HTTP_PORT = 2580
 
@@ -861,6 +849,10 @@ QRUNNER_SAVE_BAD_MESSAGES = Yes
 # このフラグは, メッセージのピクルと MailList の config.pck ファイル
 # の両方に影響することに注意. [>=2.1.4]
 SYNC_AFTER_WRITE = No
+
+# 監視プロセス mailmanctl が, うまく終了していないキューランナの再起動
+# を何回まで試みるか [>=2.2; 以前は 10 がハードコードされていた].
+MAX_RESTARTS = 10
 
 
 
