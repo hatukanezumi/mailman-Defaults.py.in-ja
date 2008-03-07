@@ -1,7 +1,7 @@
 # -*- python -*-
 # -*- coding: euc-jp -*-
 
-# Copyright (C) 1998-2006 by the Free Software Foundation, Inc.
+# Copyright (C) 1998-2007 by the Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,8 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.1.9 配布物に含まれる
-#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは 7965)
+# [訳注] このファイルは, Mailman 2.1.10 配布物に含まれる
+#   Mailman/Defaults.py.in (SF.net での Subversion リビジョンは 8204)
 #   のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
@@ -414,15 +414,14 @@ MTA = 'Manual'
 # 数も設定してほしい. [>=2.1]
 # Postfix で仮想ドメインを使っていないか, または Sendmail スタイルの仮
 # 想ドメイン (すべてのアドレスがすべての仮想ドメインから見える) を使っ
-# ているのなら, このフラグを偽に設定する.
+# ているのなら, このフラグを空のリストに設定する.
 # Postfix スタイルの仮想ドメイン (エイリアスがそれぞれの仮想ドメインの
 # 中だけに現れる) を使っているのなら, この変数を host_name の値のリス
 # トに設定して, 仮想のエントリを分離する. つまり, dom1.ain, dom2.ain,
 # dom3.ain を運用しているが dom2 と dom3 だけが仮想なら, この変数をリ
 # スト ['dom2.ain', 'dom3.ain'] に設定する. これはメーリングリストの 
-# host_name 属性にマッチさせられる. 詳細は README.POSTFIX を見る[訳注:
-# README.POSTFIX の内容は, 2.1.6 以降は上記『インストールマニュアル』
-# に移された].
+# host_name 属性にマッチさせられる. 詳細は『インストールマニュアル』
+# の Postfix の節を見る.
 POSTFIX_STYLE_VIRTUAL_DOMAINS = []
 
 # これらの変数は, それぞれ aliases.db および virtual-mailman.db を,
@@ -499,6 +498,17 @@ NNTP_REWRITE_DUPLICATE_HEADERS = [
     ('content-transfer-encoding', 'X-Original-Content-Transfer-Encoding'),
     ('mime-version', 'X-MIME-Version'),
     ]
+
+# リストへの投稿や -owner アドレス宛のメールのなかには DomainKey つまり
+# DomainKeys Identified Mail (DKIM) 署名のヘッダ <http://www.dkim.org/>
+# を持つものがある.  メッセージがリストを通過する際にヘッダやフッタをつ
+# け加えたり, 添付を削ったりといった変換をした場合はもちろんだが,
+# Reply-To ヘッダを書き換えたりしただけでも, こういった署名は使いものに
+# ならなくなってしまう.  こういった署名というものは, 使いものにならなか
+# ろうが送出されるメッセージが再署名されてしまおうが, なにかの役には立つ
+# のだろう.  とはいえ, こういったヘッダを除去したいサイトもあるだろうし,
+# そうしたければここを Yes に設定すればよい [>=2.1.10].
+REMOVE_DKIM_HEADERS = No
 
 # リスト全員に送るようなすべての「普通の」メッセージは, このハンドラモ
 # ジュールのパイプラインを通る [>=2.1]. それぞれのリスト自身では,
