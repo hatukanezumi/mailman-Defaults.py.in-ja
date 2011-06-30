@@ -18,9 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.1.11 配布物に含まれる
-#   Mailman/Defaults.py.in (launchpad.net の stable シリーズ revno: 1117)
-#   のコメント部分を日本語 (共通語) に翻訳したものです.
+# [訳注] このファイルは, Mailman 2.1.13 配布物に含まれる
+#   Mailman/Defaults.py.in のコメント部分を日本語 (共通語) に翻訳したものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
 #   確な理解のためには, 配布物に含まれる原文を参照されることをお勧めし
@@ -707,13 +706,17 @@ VERP_DELIVERY_INTERVAL = 0
 VERP_CONFIRM_FORMAT = '%(addr)s+%(cookie)s'
 
 # これは VERP_REGEXP と同様, ただし VERP_CONFIRM_FORMAT での分割用.
-# なお, [訳注: 2.1.8b1 以降は]
+# なお MTA によっては, 返事をするときに
 # From: local_part@host
 # を
 # To: "local_part" <local_part@host>
-# に書き換えて返事をするような MUA を考慮して, '<' より前にあるものは
-# すべて無視するようにした.
-VERP_CONFIRM_REGEXP = r'^(.*<)?(?P<addr>[^+]+?)\+(?P<cookie>[^@]+)@.*$'
+# ないしは
+# To: "local_part@host" <local_part@host>
+# に書き換えるものもある.  さらに, ヘッダを行折りするものもあるかも.  この
+# ことを考慮して, '<' より前になにかあればすべて無視するようにし [>=2.1.8b1],
+# さらに「(?s)」を加えることで「.」が行折りされたヘッダの改行にマッチするよ
+# うにした [>=2.1.13].
+VERP_CONFIRM_REGEXP = r'(?s)^(.*<)?(?P<addr>.+)\+(?P<cookie>[^@+]+)@.*$'
 
 # これを Yes に設定すると, VERP 風 (よりユーザに親切) な確認メッセージを使う.
 VERP_CONFIRMATIONS = No
@@ -1156,13 +1159,17 @@ MIME_DIGEST_KEEP_HEADERS = [
     'Message',
     ]
 
+# このリストの順序で, RFC 1153 まとめ読みでのヘッダの順序が決まる [>=2.1.12].
+# また MIME のまとめ読みでは, 前記の MIME 用リストにないヘッダでも, こちらの
+# リストにあれば保持する.  なお, 両方のリストに現れるヘッダは大文字小文字
+# も一致していること.  そうしないとまとめ読みに重複して現れることになるかも
+# しれない.
 PLAIN_DIGEST_KEEP_HEADERS = [
-    'Message', 'Date', 'From',
-    'Subject', 'To', 'Cc',
-    'Message-ID', 'Keywords',
+    'Message',
+    # 順序づけた RFC 1153 ヘッダ
+    'Date', 'From', 'To', 'Cc', 'Subject', 'Message-ID', 'Keywords',
     'Content-Type',
     ]
-
 
 
 #####
@@ -1463,6 +1470,7 @@ def add_language(code, description, charset, direction='ltr'):
     LC_DESCRIPTIONS[code] = (description, charset, direction)
 
 add_language('ar',    _('Arabic'),              'utf-8',       'rtl')
+add_language('ast',   _('Asturian'),            'iso-8859-1',  'ltr')
 add_language('ca',    _('Catalan'),             'utf-8',       'ltr')
 add_language('cs',    _('Czech'),               'iso-8859-2',  'ltr')
 add_language('da',    _('Danish'),              'iso-8859-1',  'ltr')
