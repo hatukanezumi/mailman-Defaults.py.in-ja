@@ -1,7 +1,7 @@
 # -*- python -*-
 # -*- coding: euc-jp -*-
 
-# Copyright (C) 1998-2008 by the Free Software Foundation, Inc.
+# Copyright (C) 1998-2010 by the Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,8 +18,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
 # USA.
 
-# [訳注] このファイルは, Mailman 2.1.13 配布物に含まれる
-#   Mailman/Defaults.py.in のコメント部分を日本語 (共通語) に翻訳したものです.
+# [訳注] このファイルは, Mailman 2.1.14-1 配布物に含まれる
+#   Mailman/Defaults.py.in のコメント部分を日本語 (共通語) に翻訳した
+#   ものです.
 #   配布等の条件は原文と同様, GNU 一般公衆利用許諾契約書 (GNU
 #   General Public License) に従います (上記も参照ください). 内容の正
 #   確な理解のためには, 配布物に含まれる原文を参照されることをお勧めし
@@ -115,10 +116,11 @@ MAILMAN_SITE_LIST = 'mailman'
 # ことになる.  一方, サイトの全リストでいちいち認証しなおさなくていい
 # のはとっても便利.  サイト認証クッキーを認めるのなら, この値を Yes に
 # する.
-# [訳注] 2.1.7 での仕様変更: リスト管理者は, 会員オプション画面で「全部
-#   変更」を有効にしてオプション変更や会員の退会を実行できなくなった.
-#   サイト管理者は, この変数が Yes のときだけ, 会員オプション画面で「全部
-#   変更」を有効にしてオプション変更や会員の退会を実行できるようになった.
+# [訳注] 2.1.7 での仕様変更: リスト管理者は, 会員オプション画面で「全
+#   部変更」を有効にしてオプション変更や会員の退会を実行できなくなっ
+#   た.  サイト管理者は, この変数が Yes のときだけ, 会員オプション画面
+#   で「全部変更」を有効にしてオプション変更や会員の退会を実行できるよ
+#   うになった.
 ALLOW_SITE_ADMIN_COOKIES = No
 
 # text/html パートをプレインテキストに変換するコマンド. これは結果を
@@ -126,8 +128,8 @@ ALLOW_SITE_ADMIN_COOKIES = No
 # 処理する一時ファイルの名前が入る.
 HTML_TO_PLAIN_TEXT_COMMAND = '/usr/bin/lynx -dump %(filename)s'
 
-# リスト名に使っていい文字を表す Python 正規表現の文字クラス.  このクラス
-# にマッチしない文字を含む名前のリストは作れない [>=2.1.11].
+# リスト名に使っていい文字を表す Python 正規表現の文字クラス.  このク
+# ラスにマッチしない文字を含む名前のリストは作れない [>=2.1.11].
 ACCEPTABLE_LISTNAME_CHARACTERS = '[-+_.=a-z0-9]'
 
 
@@ -373,8 +375,8 @@ DEFAULT_CHARSET = None
 # [訳注] この変数は既定値として iso-2022-jp が定義してあるが, 上の説明
 #   のような問題が起こるキャラクタセット --- Mailman では現在, 日本
 #   語の iso-2022-jp のみ --- では, 保存書庫は EUC などの符号化法を使
-#   うことにすればいいので, この変数が設定してあってもしてなくても, あま
-#   り意味がない.
+#   うことにすればいいので, この変数が設定してあってもしてなくても, あ
+#   まり意味がない.
 VERBATIM_ENCODING = ['iso-2022-jp']
 
 # 保存書庫が公開のとき, Mailman が生の Unix mbox ファイルも公開にして
@@ -389,7 +391,7 @@ PUBLIC_MBOX = No
 
 # [訳注]
 #   MTA と Mailman を統合するための設定については, 『GNU Mailman -
-#   インストールマニュアル』 (日訳は http://mm.tkikuchi.net/mailman-install/
+#   インストールマニュアル』 (日訳は http://mm.tkikuchi.net/mailmaninstall.html
 #   にある) の「メールサーバの設定」の章も参照.
 
 # 出ていくメールの最終的な配送モジュール. このハンドラは, リストへ, あ
@@ -430,6 +432,29 @@ MTA = 'Manual'
 # host_name 属性にマッチさせられる. 詳細は『インストールマニュアル』
 # の Postfix の節を見る.
 POSTFIX_STYLE_VIRTUAL_DOMAINS = []
+
+# 上のリストに指定した仮想ドメインに対して, Mailman は virtual-mailman
+# ファイルに次の形式の仮想マッピングを生成することで, ドメインのアドレ
+# スをローカルアドレスにマップする.
+#
+# listaddress@dom2.ain   listaddress
+# など.
+#
+# 次のように, 右辺にドメインを指定したマッピングが必要なら, 
+#
+# listaddress@dom2.ain   listaddress@localhost
+# あるいは
+# listaddress@dom2.ain   listaddress@other.local.domain
+#
+# mm_cfg.py に必要なローカルドメインを指定できる [>=2.1.14].  例えば
+#
+# VIRTUAL_MAILMAN_LOCAL_DOMAIN = 'localhost'
+# あるいは
+# VIRTUAL_MAILMAN_LOCAL_DOMAIN = 'other.local.domain'
+#
+# 設定した文字列値は, それがどんなものでも, 「@」をつけてそのまま右辺
+# のリストアドレスローカル部に追加する.
+VIRTUAL_MAILMAN_LOCAL_DOMAIN = None
 
 # これらの変数は, それぞれ aliases.db および virtual-mailman.db を,
 # 関連するプレインテキストファイルから再構築するのに使うプログラムを示す. 
@@ -1079,6 +1104,15 @@ DEFAULT_OBSCURE_ADDRESSES = Yes
 # れる).  [>=2.1]
 ALLOW_RFC2369_OVERRIDES = Yes
 
+# RFC 2822 の提案するところによると, Mailman が実際の配送に責任を持つ
+# エージェントであるのに Sender ヘッダを付加しないとしたら, RFC 違反で
+# ある.  ところが, MUA によっては (特に Outlook), From ヘッダの詳細のか
+# わりに Sender ヘッダを表示しようとするため, ユーザが混乱するし, メー
+# ルを転送すると元の送り手がわからなくなってしまう.  この変数を Yes に
+# 設定することで, リスト管理者がこのヘッダをつけないことを選択できるよ
+# うになる. [>=2.1.14]
+ALLOW_SENDER_OVERRIDES = Yes
+
 # メーリングリストでの内容フィルタの既定値. DEFAULT_FILTER_CONTENT を 
 # 真に設定すると, 内容フィルタが有効になる. [>=2.1]
 DEFAULT_FILTER_CONTENT = No
@@ -1152,9 +1186,9 @@ DEFAULT_DIGEST_SEND_PERIODIC = Yes
 # 順序はだいじ.
 MIME_DIGEST_KEEP_HEADERS = [
     'Date', 'From', 'To', 'Cc', 'Subject', 'Message-ID', 'Keywords',
-    # つぎのヘッダも保持したほうがいいとおもう
+    # つぎのヘッダも保持したほうがいいとおもう [2.1.14: List-Post 追加]
     'In-Reply-To', 'References', 'Content-Type', 'MIME-Version',
-    'Content-Transfer-Encoding', 'Precedence', 'Reply-To',
+    'Content-Transfer-Encoding', 'Precedence', 'Reply-To', 'List-Post',
     # Mailman 2.0 [とそれ以降] ではつぎのヘッダを付加する
     'Message',
     ]
